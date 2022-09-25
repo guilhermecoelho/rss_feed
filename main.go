@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	urls := handles.GetLinks()
+	links := handles.SerializeLinkJson("Links.json")
 
 	var wg sync.WaitGroup
 	defer wg.Wait()
@@ -19,8 +19,9 @@ func main() {
 
 	go func() {
 		defer wg.Done()
-		for url := range urls {
-			checkRssList(urls[url])
+
+		for item := range links.Links {
+			checkRssList(links.Links[item].Url)
 		}
 	}()
 }

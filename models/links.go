@@ -4,5 +4,6 @@ type Links struct {
 	Links []Link `json:"links"`
 }
 type Link struct {
-	Url string `json:"url"`
+	Url        string `json:"url"`
+	LastUpdate string `json:"lastUpdate"`
 }
