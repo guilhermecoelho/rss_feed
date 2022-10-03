@@ -40,6 +40,8 @@ func checkRssList(url string) {
 	handles.ReadExistedXml(rss, &rssOld)
 
 	if rssOld.Channel.LastBuildDate != rss.Channel.LastBuildDate {
+		items := rssOld.Channel.Items
+		fmt.Println(len(items))
 		handles.CreateLocalXml(rss)
 	}
 }

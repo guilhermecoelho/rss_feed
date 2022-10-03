@@ -5,5 +5,5 @@ type Links struct {
 }
 type Link struct {
 	Url        string `json:"url"`
-	LastUpdate string `json:"lastUpdate"`
+	TotalItens string `json:"totalItens"`
 }

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"time"
+	"strconv"
 
 	"github.com/guilhermecoelho/rssReader/models"
 )
@@ -23,26 +23,46 @@ func SerializeLinkJson(filePath string) models.Links {
 	return links
 }
 
-func ChangeLinkLastUpdate(url string, lastDate string) (string, error) {
+func ChangeLinkTotalItems(url string, totalItems int, jsonFile string) (int, error) {
 
-	layout := time.RFC1123
-	returnLayout := "2006-01-02 15:04:05"
+	totalNewItems := 0
 
-	//convert lastDate format
-	date, err := time.Parse(layout, lastDate)
-	if err != nil {
-		return date.Format(returnLayout), err
-	}
-
-	links := SerializeLinkJson("..\\files_test\\Links_test.json")
-
-	var lastUpdateFromJson string
+	links := SerializeLinkJson(jsonFile)
 	for item := range links.Links {
 		if url == links.Links[item].Url {
-			lastUpdateFromJson = links.Links[item].LastUpdate
-			break
+			totalItemJson, err := strconv.Atoi(links.Links[item].TotalItens)
+			if err != nil {
+				fmt.Println(err)
+			}
+			if totalItems > totalItemJson {
+				links.Links[item].TotalItens = strconv.Itoa(totalItems)
+				UpdateJson(links, jsonFile)
+				totalNewItems = totalItems - totalItemJson
+				break
+			}
 		}
 	}
+	return totalNewItems, nil
+}
 
-	return lastUpdateFromJson, nil
+func UpdateJson(links models.Links, jsonFile string) {
+	content, err := json.Marshal(links)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = ioutil.WriteFile(jsonFile, content, 0644)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func CreateJsonFile(link models.Links, fileName string) {
+	content, err := json.Marshal(link)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = ioutil.WriteFile(fileName, content, 0644)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
