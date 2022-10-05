@@ -20,28 +20,36 @@ func main() {
 	go func() {
 		defer wg.Done()
 
-		for item := range links.Links {
-			checkRssList(links.Links[item].Url)
+		for _, link := range links.Links {
+			rss := checkRssList(link.Url)
+
+			totalitems := len(rss.Channel.Items)
+			totalItemsJson, _ := handles.GetTotalItemsJson(link.Url, "Links.json")
+
+			totalNewItems := totalitems - totalItemsJson
+
+			totalCountItems := totalNewItems
+			if totalCountItems > 5 {
+				totalCountItems = 5
+			}
+			for count := 0; count < totalCountItems; count++ {
+				fmt.Println(rss.Channel.Items[count].Title)
+			}
+
+			handles.ChangeLinkTotalItems(link.Url, totalitems, "Links.json")
 		}
 	}()
 }
 
-func checkRssList(url string) {
+func checkRssList(url string) models.Rss {
+	var rss models.Rss
 	byteXml, err := handles.GetXml(url)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return rss
 	}
 
-	var rss models.Rss
 	xml.Unmarshal(byteXml, &rss)
 
-	var rssOld models.Rss
-	handles.ReadExistedXml(rss, &rssOld)
-
-	if rssOld.Channel.LastBuildDate != rss.Channel.LastBuildDate {
-		items := rssOld.Channel.Items
-		fmt.Println(len(items))
-		handles.CreateLocalXml(rss)
-	}
+	return rss
 }

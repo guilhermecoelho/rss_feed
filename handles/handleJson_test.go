@@ -41,6 +41,34 @@ func Test_ChangeLinkTotalItems(t *testing.T) {
 	}
 }
 
+func Test_GetTotalItemsJson(t *testing.T) {
+
+	//Arrange
+	url := "https://anchor.fm/s/4f366e84/podcast/rss"
+	totalItems := 4
+
+	jsonFile := "..\\files_test\\Links_test_ChangeLinkTotalItems.json"
+	os.Remove(jsonFile)
+
+	var links models.Links
+	var link models.Link
+	link.Url = "https://anchor.fm/s/4f366e84/podcast/rss"
+	link.TotalItens = strconv.Itoa(totalItems)
+	links.Links = append(links.Links, link)
+	createLocalJsonFile(links, jsonFile)
+
+	//Act
+	result, err := GetTotalItemsJson(url, jsonFile)
+
+	//Assert
+	if err != nil {
+		t.Error("Erro : ", err)
+	}
+	if result != totalItems {
+		t.Error("Expected "+strconv.Itoa(totalItems)+", but is: ", result)
+	}
+}
+
 func Test_CreateJsonFile(t *testing.T) {
 
 	//Arrange

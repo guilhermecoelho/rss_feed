@@ -45,6 +45,23 @@ func ChangeLinkTotalItems(url string, totalItems int, jsonFile string) (int, err
 	return totalNewItems, nil
 }
 
+func GetTotalItemsJson(url string, jsonFile string) (int, error) {
+	totalItemJson := 0
+
+	links := SerializeLinkJson(jsonFile)
+	for item := range links.Links {
+		if url == links.Links[item].Url {
+			totalItems, err := strconv.Atoi(links.Links[item].TotalItens)
+			if err != nil {
+				totalItemJson = 0
+			}
+			totalItemJson = totalItems
+			break
+		}
+	}
+	return totalItemJson, nil
+}
+
 func UpdateJson(links models.Links, jsonFile string) {
 	content, err := json.Marshal(links)
 	if err != nil {

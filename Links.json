@@ -1,10 +1,1 @@
-{
-    "Links":[
-        {
-            "url": "https://hipsters.tech/feed/podcast/"
-        },
-        {
-            "url": "https://anchor.fm/s/4f366e84/podcast/rss"
-        }
-    ]
-}
+{"links":[{"url":"https://hipsters.tech/feed/podcast/","totalItens":"392"},{"url":"https://anchor.fm/s/4f366e84/podcast/rss","totalItens":"77"}]}
