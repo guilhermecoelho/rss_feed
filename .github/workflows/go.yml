@@ -48,4 +48,4 @@ jobs:
     - name: copy builds to server
       run: |
           ls /var/www
-          rsync -vrm /build/* ${{secrets.VM_USERNAME}}@${{secrets.VM_HOST}}:/var/www/test
+          rsync -vrm ./* ${{secrets.VM_USERNAME}}@${{secrets.VM_HOST}}:/var/www/test
