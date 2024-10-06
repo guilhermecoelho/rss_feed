@@ -27,13 +27,24 @@ jobs:
     - name: Test
       run: go test -v ./...
       
-    - name: Deploy-Build-Golang-App-To-Ubuntu-VM
-      uses: appleboy/ssh-action@master
-      with:
-          host: '${{ secrets.VM_HOST }}'
-          username: '${{ secrets.BM_USERNAME }}'
-          key: '${{ secrets.VM_SSH_PORT }}'
-          port: '${{ secrets.VM_SSH_PORT }}'
-          script: |
-            cd /var/www/test
-            ls -l
+   # - name: Deploy-Build-Golang-App-To-Ubuntu-VM
+   #   uses: appleboy/ssh-action@master
+   #   with:
+   #       host: '${{ secrets.VM_HOST }}'
+   #       username: '${{ secrets.BM_USERNAME }}'
+   #       key: '${{ secrets.VM_SSH_PORT }}'
+   #       port: '${{ secrets.VM_SSH_PORT }}'
+   #       script: |
+   #         cd /var/www/test
+   #         ls -l
+    - name: Setup SSH
+      run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.VM_SSH_KEY }}" > ~/.ssh/id_rsa.pub
+          chmod 600 ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa.pub
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+    - name: copy builds to server
+      run: |
+          ls /var/www
