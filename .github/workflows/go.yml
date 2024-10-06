@@ -30,7 +30,10 @@ jobs:
     - name: Deploy-Build-Golang-App-To-Ubuntu-VM
       uses: appleboy/ssh-action@master
       with:
-          host: '${{ secrets.SSH_HOST }}'
-          username: '${{ secrets.SSH_USER }}'
-          key: '${{ secrets.SSH_PUBLIC_KEY }}'
-          port: '${{ secrets.SSH_PORT }}'
+          host: '${{ secrets.VM_HOST }}'
+          username: '${{ secrets.BM_USERNAME }}'
+          key: '${{ secrets.VM_SSH_PORT }}'
+          port: '${{ secrets.VM_SSH_PORT }}'
+          script: |
+            cd /var/www/test
+            ls -l
